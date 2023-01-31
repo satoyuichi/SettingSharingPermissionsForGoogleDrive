@@ -1,1 +1,13 @@
-# SettingSharingPermissionsForGoogleDrive
+# ChangeOwnerForGoogleDrive
+　Google Driveのオーナー権限を変更するためのGASです。指定したフォルダを起点として再起的に変更します。
+
+# Usage
+　スクリプトプロパティに以下の値をセットしてから実行してください。
+
++ FOLDER_NAME: 起点とするとフォルダ名
++ OWNER_MAIL_ADDRESS: 変更後にオーナー権限を与えたい人のメールアドレス
++ MY_MAIL_ADDRESS: 現在のオーナー権限を持っている自分のメールアドレス
+
+# !! Warning !!
++ オーナー権限を変更すると、自らオーナー権限の変更はできなくなるため慎重に実行してください
++ 実行すると新しいオーナーに向けて、一ファイルごとに通知メールが飛んでしまうので実行前にフィルター設定をしてもらってから実行するようにしてください
