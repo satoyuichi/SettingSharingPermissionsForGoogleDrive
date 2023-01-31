@@ -1,11 +1,16 @@
+const FOLDERS_TOKEN = "FOLDERS_CONTINUATION_TOKEN";
+
 const folder_name = PropertiesService.getScriptProperties().getProperty("FOLDER_NAME");
 const owner_mail_address = PropertiesService.getScriptProperties().getProperty("OWNER_MAIL_ADDRESS");
 const my_mail_address = PropertiesService.getScriptProperties().getProperty("MY_MAIL_ADDRESS");
 
 function main() {
-  const folders = DriveApp.getFoldersByName(folder_name);
+  const token = PropertiesService.getScriptProperties().getProperty(FOLDERS_TOKEN);
+  const folders = token ? DriveApp.continueFolderIterator(token) : DriveApp.getFoldersByName(folder_name);
   
   while (folders.hasNext()) {
+    saveFolderContinuationToken(folders);
+
     let folder = folders.next();
     Logger.log(folder.getName());
 
@@ -13,11 +18,18 @@ function main() {
   }  
 }
 
+function saveFolderContinuationToken(folder) {
+  let token = folder.getContinuationToken();
+  PropertiesService.getScriptProperties().setProperty(FOLDERS_TOKEN, token);
+}
+
 function getSubFolder(folder) {
   let subfolders = folder.getFolders();
 
   if(subfolders) {
     while (subfolders.hasNext()) {
+      saveFolderContinuationToken(subfolders);
+
       let subfolder = subfolders.next();
       getSubFolder(subfolder);
       changeOwner(subfolder, owner_mail_address);
